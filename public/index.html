@@ -1,20 +1,308 @@
 <!doctype html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#ffffff">
+<meta name="description" content="ترب حضوری — دستیار خرید حضوری: قیمت ثبت‌شده، فروشگاه‌های دارای آفر و مسیر رسیدن را شفاف کنار هم ببین.">
 <title>ترب حضوری | دستیار خرید حضوری</title>
+<link rel="icon" type="image/png" href="/static/vendor/brand/torob-favicon-32.png">
+<link rel="apple-touch-icon" href="/static/vendor/brand/torob-mark-180.png">
+<link rel="preconnect" href="https://tile.openstreetmap.org" crossorigin>
+<link rel="stylesheet" href="/static/vendor/leaflet/leaflet.css">
 <link rel="stylesheet" href="/static/style.css">
+<link rel="stylesheet" href="/static/shell.css">
 </head>
 <body>
-<header class="topbar"><div class="brand"><span class="brandmark">ت</span><div><b>ترب حضوری</b><small>دستیار خرید از فروشگاه‌های تهران</small></div></div><button class="ghost" id="metaBtn">آمار داده</button></header>
-<main class="shell">
-<section class="hero"><div class="eyebrow">خرید حضوری، با آگاهی بیشتر</div><h1>کالایت را پیدا کن،<br><em>مقصد مناسبش را بساز.</em></h1><p>محصول، بودجه و محدوده‌ات را بگو. قیمت ثبت‌شده، فروشگاه‌های دارای آفر و اطلاعات مسیر را شفاف کنار هم می‌بینی.</p><div class="entry"><button class="entry-active" data-q="">نیازم را می‌گویم</button><button data-q="گوشی موبایل">محصول را می‌شناسم</button><button data-store="1">از فروشگاه یا پاساژ شروع می‌کنم</button></div></section>
-<section class="searchbox"><div class="searchrow"><span class="searchicon">⌕</span><input id="q" placeholder="مثلاً: دوربین مدار بسته، کابل افشان، گوشی سامسونگ..." autocomplete="off"><button id="search">جست‌وجو</button></div><div class="filters"><select id="location"><option value="">همه محدوده‌های ثبت‌شده</option></select><input id="budget" type="number" placeholder="سقف بودجه (تومان)"><button class="filterbtn" id="useLocation">⌖ موقعیت من</button><button class="filterbtn" id="planBtn">برنامه مراجعه</button></div><div class="filterpanel"><div class="filtertitle">فیلترهای دقیق <span id="filterSummary" class="muted">بدون فیلتر</span></div><div class="filtergroups"><fieldset><legend>برند</legend><div id="brandFilters" class="checklistrow"></div></fieldset><fieldset><legend>شرایط فروش ثبت‌شده</legend><div id="paymentFilters" class="checklistrow"></div><label class="checkitem"><input type="checkbox" id="warrantyFilter"> <span>گارانتی ثبت‌شده</span></label><label class="checkitem"><input type="checkbox" id="fastFilter"> <span>ارسال فوری ثبت‌شده</span></label></fieldset></div></div></section>
-<section class="insight"><div class="insight-icon">✦</div><div><b>دستیار تصمیم، نه وعدهٔ موجودی</b><p>آفر ثبت‌شده با موجودی امروز یکی نیست. هر اطلاعات با زمان و وضعیت خودش نمایش داده می‌شود.</p></div></section>
-<section class="chatbox"><div class="sectionhead"><div><span class="eyebrow">گفت‌وگو با دستیار</span><h2>محصولت را با چت پیدا کن</h2></div><span class="muted">مدل بر اساس دیتاست ترب پاسخ می‌دهد</span></div><div id="chatMessages" class="chatmessages"><div class="chatmsg assistant">سلام! چه محصولی می‌خواهی؟ بودجه، محدوده یا کاربردت را هم بگویی، پیشنهاد دقیق‌تری می‌دهم.</div></div><div class="chatrow"><input id="chatInput" placeholder="مثلاً یک گوشی سامسونگ تا ۳۰ میلیون در تهران می‌خواهم..."><button id="chatSend">ارسال</button></div></section>
-<section id="compareArea" class="comparearea hidden"><div class="comparetray"><div class="cmpinfo"><b>مقایسهٔ محصولات</b><span id="cmpCount" class="muted">۰ انتخاب شده</span></div><div id="cmpChips" class="cmpchips"></div><div class="cmpactions"><button id="cmpRun" class="cmpgo" disabled>مقایسه کن</button><button id="cmpClear" class="ghost">پاک کردن</button></div></div><div id="compareTable"></div></section>
-<section id="results" class="results"><div class="sectionhead"><div><span class="eyebrow">نتایج پیشنهادی</span><h2>از کجا شروع کنیم؟</h2></div><div id="resultCount" class="muted"></div></div><div class="empty"><div class="empty-icon">◌</div><h3>هنوز جست‌وجویی انجام نشده</h3><p>نام محصول یا کاری که می‌خواهی انجام بدهی را وارد کن.</p></div><div id="cards" class="grid"></div></section>
-<section id="plan" class="plan hidden"><div class="sectionhead"><div><span class="eyebrow">سفر خرید شما</span><h2>برنامه مراجعه</h2></div><button class="ghost" id="closePlan">بستن</button></div><div class="steps"><span class="done">۱ نیاز</span><span class="done">۲ انتخاب</span><span class="active">۳ مقصد</span><span>۴ بررسی حضوری</span></div><div class="planbody"><div class="plan-card"><div class="pin">⌖</div><div><h3 id="planTitle">یک محصول را انتخاب کن</h3><p id="planText">بعد از انتخاب محصول، فروشگاه‌های دارای آفر و مقصدهای نزدیک اینجا می‌آیند.</p></div></div><div class="checklist"><b>چک‌لیست قبل از حرکت</b><label><input type="checkbox"> قیمت ثبت‌شده و زمان تغییر را دیدم</label><label><input type="checkbox"> موجودی را تأییدشده فرض نمی‌کنم</label><label><input type="checkbox"> مدل، گارانتی و شرایط پرداخت را در فروشگاه می‌پرسم</label></div></div></section>
-</main><div id="modal" class="modal hidden"><div class="modalbox"><button class="close" id="closeModal">×</button><h2>وضعیت داده</h2><div id="stats"></div><p class="fine">این دادهٔ snapshot است؛ قیمت‌ها مربوط به زمان ثبت هستند و شماره‌های فروشگاه نمایش داده نمی‌شوند.</p></div></div>
+
+<a class="skip" href="#main">رفتن به محتوای اصلی</a>
+<div id="scrollProgress" class="scrollprogress" aria-hidden="true"></div>
+
+<header class="topbar" id="siteHeader">
+  <div class="topbar-inner">
+
+    <a class="brand" href="#main" aria-label="ترب حضوری — خانه">
+      <span class="brandlogo">
+        <img src="/static/vendor/brand/torob-mark-180.png" width="40" height="40" alt="نشان ترب" decoding="async">
+      </span>
+      <span class="brandtext">
+        <b>ترب حضوری</b>
+        <small>دستیار خرید از فروشگاه‌های تهران</small>
+      </span>
+    </a>
+
+    <nav class="mainnav" id="mainNav" aria-label="ناوبری اصلی">
+      <div class="navlinks">
+        <a class="navlink is-active" href="#main"><span aria-hidden="true">⌕</span> کشف محصول</a>
+        <a class="navlink" href="#mapSection"><span aria-hidden="true">⌖</span> نقشه فروشگاه‌ها</a>
+        <a class="navlink" href="#chatSection"><span aria-hidden="true">✦</span> دستیار خرید</a>
+        <a class="navlink" href="#results"><span aria-hidden="true">▤</span> نتایج</a>
+        <a class="navlink" href="#plan"><span aria-hidden="true">▣</span> برنامه مراجعه</a>
+  <a class="navlink" href="#sellerPanel"><span aria-hidden="true">▥</span> پنل فروشنده</a>
+      </div>
+    </nav>
+
+    <div class="topactions">
+      <button class="navsearch" id="notifyInboxBtn" type="button" aria-label="اعلان‌های من"><span aria-hidden="true">♢</span><span class="notifycount hidden" id="notifyCount">۰</span></button>
+      <button class="navsearch" id="navSubsBtn" type="button" aria-label="اشتراک‌های من"><span aria-hidden="true">♡</span></button>
+      <button class="navsearch" id="navSearchBtn" type="button" aria-label="جست‌وجوی سریع">
+        <span aria-hidden="true">⌕</span><span class="navsearch-label">جست‌وجو</span><kbd>/</kbd>
+      </button>
+      <button class="ghost databtn" id="metaBtn" type="button"><span aria-hidden="true">◍</span> آمار داده</button>
+      <button class="navtoggle" id="navToggle" type="button" aria-label="منو" aria-expanded="false" aria-controls="navDrawer">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="topcat" id="topCatStrip" aria-label="دسته‌های پرتردد">
+    <button class="catarrow catarrow-next" id="catNext" type="button" aria-label="دسته‌های بیشتر" hidden>‹</button>
+    <div class="topcat-inner" id="topCatChips"><span class="chip-skeleton"></span><span class="chip-skeleton"></span><span class="chip-skeleton"></span><span class="chip-skeleton"></span></div>
+    <button class="catarrow catarrow-prev" id="catPrev" type="button" aria-label="دسته‌های قبلی" hidden>›</button>
+  </div>
+</header>
+
+<div class="navdrawer" id="navDrawer" aria-hidden="true">
+  <div class="navdrawer-panel" role="dialog" aria-modal="true" aria-label="منوی سایت">
+    <div class="navdrawer-head">
+      <span class="brandlogo small"><img src="/static/vendor/brand/torob-mark-180.png" width="32" height="32" alt="نشان ترب"></span>
+      <b>ترب حضوری</b>
+      <button class="navclose" id="navClose" type="button" aria-label="بستن منو">×</button>
+    </div>
+    <a class="drawerlink" href="#main">⌕ کشف محصول</a>
+    <a class="drawerlink" href="#mapSection">⌖ نقشه فروشگاه‌ها</a>
+    <a class="drawerlink" href="#chatSection">✦ دستیار خرید</a>
+    <a class="drawerlink" href="#results">▤ نتایج جست‌وجو</a>
+    <a class="drawerlink" href="#plan">▣ برنامه مراجعه</a>
+    <button class="drawerlink drawerdata" id="drawerMetaBtn" type="button">◍ آمار داده</button>
+    <p class="drawer-note">داده‌ها snapshot ثبت‌شدهٔ ترب هستند؛ موجودی امروز تأیید نشده است.</p>
+  </div>
+</div>
+
+<main class="shell" id="main">
+
+  <section class="hero">
+    <div class="eyebrow"><span class="livedot" aria-hidden="true"></span> خرید حضوری، با آگاهی بیشتر</div>
+    <h1>کالایت را پیدا کن،<br><em>مقصد مناسبش را بساز.</em></h1>
+    <p>محصول، بودجه و محدوده‌ات را بگو. قیمت ثبت‌شده، فروشگاه‌های دارای آفر و اطلاعات مسیر را شفاف کنار هم می‌بینی.</p>
+    <div class="entry">
+      <button class="entry-active" data-q="">نیازم را می‌گویم</button>
+      <button data-q="گوشی موبایل">محصول را می‌شناسم</button>
+      <button data-store="1">از فروشگاه یا پاساژ شروع می‌کنم</button>
+    </div>
+  </section>
+
+  <aside class="left-rail" aria-label="فیلتر سریع و نقشه">
+    <section class="railcard quickfilters">
+      <div class="railhead"><span class="railicon">⌘</span><div><span class="eyebrow">کنترل سریع</span><h2>فیلترهای سریع</h2></div></div>
+      <label>دسته محصول<select id="quickCategory"><option value="">همه دسته‌ها</option></select></label>
+      <label>سقف قیمت<input id="quickBudget" type="number" placeholder="مثلاً ۳۰٬۰۰۰٬۰۰۰"></label>
+      <label class="quickcheck"><input type="checkbox" id="quickAvailable"><span>فقط محصولات دارای آفر</span></label>
+      <p class="railnote">موجودی لحظه‌ای از این snapshot تأیید نمی‌شود.</p>
+    </section>
+
+    <section class="railcard mapcard" id="mapSection">
+      <div class="railhead"><span class="railicon">⌖</span><div><span class="eyebrow">مقصدهای ثبت‌شده</span><h2>فروشگاه‌ها روی نقشه</h2></div></div>
+      <div class="mapwrap">
+        <div id="miniMap" class="minimap realmap" aria-label="نقشهٔ واقعی نقاط ثبت‌شدهٔ فروشگاه‌ها"></div>
+        <div id="mapFallback" class="mapfallback hidden"><b>نقشهٔ آنلاین در دسترس نیست</b><p>اتصال یا دسترسی به تایل نقشه برقرار نشد. نقاط و فروشگاه‌ها همچنان در نتایج پایین قابل مشاهده‌اند.</p></div>
+        <div id="mapState" class="mapstate">فروشگاه‌های ثبت‌شده روی نقشه</div>
+        <button id="mapExpand" class="mapexpand" type="button" aria-label="بزرگ کردن نقشه">⤢ بزرگ‌نمایی</button>
+      </div>
+      <div class="maplegend"><span><i class="dot red"></i>فروشگاه دارای آفر</span><span><i class="dot green"></i>موقعیت شما</span><span class="mapattrib">© OpenStreetMap</span></div>
+      <p class="railnote">نقاط از مختصات ثبت‌شدهٔ snapshot؛ ورودی مغازه و موجودی امروز تأیید نشده است.</p>
+    </section>
+  </aside>
+
+  <aside class="right-rail" aria-label="کشف محصول">
+    <section class="railcard spotlight">
+      <div class="spotlighttop"><span class="eyebrow">کشف پیشنهادی</span><span class="spark">✦</span></div>
+      <div id="spotlightImage" class="spotlightimage">◇</div>
+      <span class="tag">برای شروع کشف کن</span>
+      <h2 id="spotlightTitle">یک محصول را جست‌وجو کن</h2>
+      <p id="spotlightText">دستیار، محصول و فروشگاه مناسب را کنار هم پیدا می‌کند.</p>
+      <button id="spotlightAction" class="spotlightbtn">شروع جست‌وجو <span>←</span></button>
+      <div class="spotlightlist" id="spotlightList" aria-label="پیشنهادهای ثبت‌شده"></div>
+    </section>
+    <section class="railcard agenttip"><span class="railicon">◌</span><div><b>چطور بهتر بپرسم؟</b><p>محصول، بودجه و محدوده را بگو تا پاسخ دقیق‌تری بگیری.</p></div></section>
+  </aside>
+
+  <section class="searchbox" id="searchBox">
+    <div class="searchrowwrap">
+      <div class="searchrow">
+        <span class="searchicon" aria-hidden="true">⌕</span>
+        <input id="q" placeholder="مثلاً: دوربین مدار بسته، کابل افشان، گوشی سامسونگ..." autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="suggestBox">
+        <button id="search" type="button"><span aria-hidden="true">↗</span> جست‌وجو</button>
+      </div>
+      <div class="suggestbox hidden" id="suggestBox" role="listbox" aria-label="پیشنهادهای جست‌وجو"></div>
+    </div>
+    <div class="filters">
+      <select id="location" aria-label="محدوده"><option value="">همه محدوده‌های ثبت‌شده</option></select>
+      <input id="budget" type="number" placeholder="سقف بودجه (تومان)" aria-label="سقف بودجه">
+      <select id="sort" aria-label="مرتب‌سازی">
+        <option value="relevance">مرتب‌سازی: بیشترین ارتباط</option>
+        <option value="cheapest">ارزان‌ترین قیمت ثبت‌شده</option>
+        <option value="nearest">نزدیک‌ترین فروشگاه</option>
+        <option value="newest">تازه‌ترین قیمت ثبت‌شده</option>
+      </select>
+      <button class="filterbtn" id="useLocation" type="button"><span aria-hidden="true">⌖</span> موقعیت من</button>
+      <button class="filterbtn" id="planBtn" type="button"><span aria-hidden="true">▣</span> برنامه مراجعه</button>
+    </div>
+    <div class="filterpanel">
+      <button class="filtertitle" id="filterToggle" type="button" aria-expanded="true" aria-controls="filterGroups">
+        <span>فیلترهای دقیق</span>
+        <span class="filtermeta"><span id="filterSummary" class="muted">بدون فیلتر</span><span class="filterchev" aria-hidden="true">⌄</span></span>
+      </button>
+      <div class="filtergroups" id="filterGroups">
+        <fieldset><legend>برند</legend><div id="brandFilters" class="checklistrow"></div></fieldset>
+        <fieldset>
+          <legend>شرایط فروش ثبت‌شده</legend>
+          <div id="paymentFilters" class="checklistrow"></div>
+          <label class="checkitem"><input type="checkbox" id="warrantyFilter"> <span>گارانتی ثبت‌شده</span></label>
+          <label class="checkitem"><input type="checkbox" id="fastFilter"> <span>ارسال فوری ثبت‌شده</span></label>
+        </fieldset>
+      </div>
+    </div>
+  </section>
+
+  <section class="insight">
+    <div class="insight-icon">✦</div>
+    <div><b>دستیار تصمیم، نه وعدهٔ موجودی</b><p>آفر ثبت‌شده با موجودی امروز یکی نیست. هر اطلاعات با زمان و وضعیت خودش نمایش داده می‌شود.</p></div>
+  </section>
+
+  <section class="chatbox" id="chatSection">
+    <div class="sectionhead">
+      <div><span class="eyebrow">گفت‌وگو با دستیار</span><h2>محصولت را با چت پیدا کن</h2></div>
+      <span class="muted">مدل بر اساس دیتاست ترب پاسخ می‌دهد</span>
+    </div>
+    <div id="chatMessages" class="chatmessages">
+      <div class="chatmsg assistant">سلام! چه محصولی می‌خواهی؟ بودجه، محدوده یا کاربردت را هم بگویی، پیشنهاد دقیق‌تری می‌دهم.</div>
+    </div>
+    <div class="chatrow">
+      <input id="chatInput" placeholder="مثلاً یک گوشی سامسونگ تا ۳۰ میلیون در تهران می‌خواهم...">
+      <button id="chatSend" type="button">ارسال</button>
+    </div>
+  </section>
+
+  <section id="compareArea" class="comparearea hidden">
+    <div class="comparetray">
+      <div class="cmpinfo"><b>مقایسهٔ محصولات</b><span id="cmpCount" class="muted">۰ انتخاب شده</span></div>
+      <div id="cmpChips" class="cmpchips"></div>
+      <div class="cmpactions"><button id="cmpRun" class="cmpgo" disabled>مقایسه کن</button><button id="cmpClear" class="ghost">پاک کردن</button></div>
+    </div>
+    <div id="compareTable"></div>
+  </section>
+
+  <section id="results" class="results">
+    <div class="sectionhead">
+      <div><span class="eyebrow">نتایج پیشنهادی</span><h2>از کجا شروع کنیم؟</h2></div>
+      <div id="resultCount" class="muted"></div>
+    </div>
+    <div class="empty"><div class="empty-icon">◌</div><h3>هنوز جست‌وجویی انجام نشده</h3><p>نام محصول یا کاری که می‌خواهی انجام بدهی را وارد کن.</p></div>
+    <div id="cards" class="grid"></div>
+  </section>
+
+  <section id="plan" class="plan hidden">
+    <div class="sectionhead">
+      <div><span class="eyebrow">سفر خرید شما</span><h2>برنامه مراجعه</h2></div>
+      <button class="ghost" id="closePlan">بستن</button>
+    </div>
+    <div class="steps"><span class="done">۱ نیاز</span><span class="done">۲ انتخاب</span><span class="active">۳ مقصد</span><span>۴ بررسی حضوری</span></div>
+    <div class="planbody">
+      <div class="plan-card">
+        <div class="pin">⌖</div>
+        <div><h3 id="planTitle">یک محصول را انتخاب کن</h3><p id="planText">بعد از انتخاب محصول، فروشگاه‌های دارای آفر و مقصدهای نزدیک اینجا می‌آیند.</p></div>
+      </div>
+      <div class="checklist">
+        <b>چک‌لیست قبل از حرکت</b>
+        <label><input type="checkbox"> قیمت ثبت‌شده و زمان تغییر را دیدم</label>
+        <label><input type="checkbox"> موجودی را تأییدشده فرض نمی‌کنم</label>
+        <label><input type="checkbox"> مدل، گارانتی و شرایط پرداخت را در فروشگاه می‌پرسم</label>
+      </div>
+    </div>
+  </section>
+
+  <section id="sellerPanel" class="sellerpanel">
+    <div class="sectionhead"><div><span class="eyebrow">نسخهٔ دمو · بدون اتصال زنده</span><h2>پنل فروشنده و کارتابل رسیدگی</h2></div><button class="filterbtn" id="sellerLoad" type="button">بارگذاری کارتابل</button></div>
+    <div class="sellercontrols"><label>شناسهٔ فروشگاه<input id="sellerShop" placeholder="برای دمو، شناسه فروشگاه را وارد کن"></label><p class="fine">فروشنده فقط باید اطلاعات فروشگاه مجاز خودش را تغییر دهد. تغییرات اینجا دمو و قابل پیگیری‌اند؛ رزرو، خرید و همگام‌سازی زنده نیستند.</p></div>
+    <div id="sellerInbox" class="sellerinbox"><p class="fine">برای مشاهدهٔ هشدار کمبود/اتمام و گزارش‌های مغایرت، کارتابل را بارگذاری کن.</p></div>
+  </section>
+</main>
+
+<button class="totop" id="toTop" type="button" aria-label="بازگشت به بالای صفحه">↑</button>
+
+<div id="inventoryNotify" class="notifybox hidden" role="dialog" aria-modal="true" aria-labelledby="notifyTitle">
+  <div class="notifybox-inner">
+    <button class="close" id="closeNotify" type="button" aria-label="بستن">×</button>
+    <span class="eyebrow">هشدار شرطی</span>
+    <h2 id="notifyTitle">وقتی موجود شد خبرم کن</h2>
+    <p class="fine">ایجنت فقط پس از یک رویداد معتبر موجودی اطلاع می‌دهد؛ این کالا رزرو نمی‌شود و تماس مکرر با فروشنده انجام نمی‌گیرد.</p>
+    <form id="notifyForm">
+      <input type="hidden" id="notifyProduct">
+      <input type="hidden" id="notifyShop">
+      <label>کانال اطلاع‌رسانی
+        <select id="notifyChannel"><option value="browser">اعلان داخل سایت</option><option value="sms">پیامک</option></select>
+      </label>
+      <label id="notifyPhoneWrap" class="hidden">شماره موبایل
+        <input id="notifyPhone" inputmode="tel" placeholder="مثلاً ۰۹۱۲۱۲۳۴۵۶۷">
+      </label>
+      <label>سقف قیمت اختیاری
+        <input id="notifyMaxPrice" type="number" min="0" placeholder="بدون محدودیت">
+      </label>
+      <label class="consentline"><input id="notifyConsent" type="checkbox" required> <span>با دریافت این اطلاع‌رسانی و ذخیرهٔ این شرط موافقم.</span></label>
+      <button class="primary" type="submit">ثبت هشدار</button>
+    </form>
+    <p class="fine">هر رخداد فقط یک‌بار برای این شرط اعلان می‌شود. مکث و لغو از بخش اشتراک‌ها ممکن است.</p>
+    <span class="notifybell" aria-hidden="true">♢</span>
+  </div>
+</div>
+
+<div id="reportBox" class="notifybox hidden" role="dialog" aria-modal="true" aria-labelledby="reportTitle">
+  <div class="notifybox-inner">
+    <button class="close" id="closeReport" type="button" aria-label="بستن">×</button>
+    <span class="eyebrow">گزارش خصوصی</span>
+    <h2 id="reportTitle">گزارش مغایرت آفر</h2>
+    <p class="fine">گزارش شما خصوصی است، خودکار نظر عمومی منتشر نمی‌کند و به‌تنهایی موجودی یا رتبه را تغییر نمی‌دهد. تأیید دریافت گزارش با تأیید صحت آن یکی نیست.</p>
+    <form id="reportForm">
+      <input type="hidden" id="reportProduct"><input type="hidden" id="reportShop">
+      <label>موضوع
+        <select id="reportIssue">
+          <option value="out_of_stock">کالا موجود نبود</option>
+          <option value="price_mismatch">قیمت با اعلام‌شده تفاوت داشت</option>
+          <option value="variant_mismatch">نسخه/مدل متفاوت بود</option>
+          <option value="purchase_condition">شرایط خرید متفاوت بود</option>
+        </select>
+      </label>
+      <label>توضیح اختیاری<textarea id="reportNote" rows="2" placeholder="مثلاً فقط رنگ مشکی موجود بود"></textarea></label>
+      <div class="previewbox" id="reportPreview"></div>
+      <button class="primary" type="submit">تأیید و ثبت گزارش</button>
+    </form>
+  </div>
+</div>
+
+<div id="subsBox" class="notifybox hidden" role="dialog" aria-modal="true" aria-labelledby="subsTitle">
+  <div class="notifybox-inner">
+    <button class="close" id="closeSubs" type="button" aria-label="بستن">×</button>
+    <span class="eyebrow">هشدارهای من</span>
+    <h2 id="subsTitle">اشتراک‌های شرطی</h2>
+    <p class="fine">هر اشتراک مستقل از گفتگوست. مکث، ادامه یا لغو هر کدام به‌صورت جداگانه ممکن است.</p>
+    <div id="subsList" class="subslist"></div>
+  </div>
+</div>
+
+<div id="modal" class="modal hidden">
+  <div class="modalbox">
+    <button class="close" id="closeModal">×</button>
+    <h2>وضعیت داده</h2>
+    <div id="stats"></div>
+    <p class="fine">این دادهٔ snapshot است؛ قیمت‌ها مربوط به زمان ثبت هستند و شماره‌های فروشگاه نمایش داده نمی‌شوند.</p>
+  </div>
+</div>
+
+<div id="toasts" class="toasts" role="status" aria-live="polite"></div>
+
+<script src="/static/vendor/leaflet/leaflet.js"></script>
 <script src="/static/app.js"></script>
-</body></html>
+<script src="/static/shell.js"></script>
+</body>
+</html>
